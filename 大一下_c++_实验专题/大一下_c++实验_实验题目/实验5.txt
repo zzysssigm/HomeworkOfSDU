@@ -1,0 +1,182 @@
+     
+--------------------------------------------------------
+实验五、 联合体、数据共享与保护
+
+实验目的：
+1. 练习标识符的不同作用域和生命周期，对象的静态、动态生存期在编程中的应用
+2. 练习类静态（static）成员的使用
+3. 练习友元：友元类
+4. 练习const: 常对象、常成员、常引用、常指针
+
+实验内容：
+参照《C++语言程序设计》学生用书，完成以下实验：
+
+--第5章 实验5 数据的共享与保护 --
+1. 作用域与生命周期：
+   （1）运行以下程序段，分析打印结果。
+    int main(){
+		int a = 1, b = 1;
+		cout<<"a = "<<a<<" b = "<<b<<endl;
+		{
+			int b = 3;
+			cout<<"a = "<<a<<" b = "<<b<<endl;
+		}
+		return 0;	
+	}
+
+   （2）运行以下程序段。该程序段通过pt获取a的地址。根据你对作用域与生命周期的理解，描述一下运行程序前后你对打印结果的预期，并尝试回答为什么输出结果是这样的。
+    int main(){
+		int *pt;
+		{
+			int a = 315;
+			pt = &a;
+		}
+		cout<<*pt<<endl;	
+		return 0;	
+	}
+
+
+2. 类的静态成员：
+  设计一个学生类，要求：
+	1. 需要有以下私有成员数据：学号（int stid），学生总数（numOfStudents int）。其中学生总数是静态数据。
+	2. 还需要有以下函数：print()打印学生信息。包括学号以及当前学生总数。printNumOfStudents()返回当前学生总数。
+	3. 有唯一的构造函数Student(int stid)实现对学号的初始化。
+	4. 学生总数需要被初始化为0
+	5. 每实例化一个学生对象需要将学生总数加一，每销毁（析构）一个学生对象需要将学生总数减一。
+  构造完成后运行以下main函数代码并回答问题：
+  int main(){
+	Student::printNumOfStudents();
+	Student s1(0);
+	Student s2(1);
+	{
+		Student s3(2);
+		Student::printNumOfStudents();
+	}
+	Student::printNumOfStudents();
+	s1.printNumOfStudents();
+	return 0;	
+  }
+   
+  （1）设计相应的类，运行main函数并分析结果
+  （2）在类中添加以下函数，在main函数中让s1和s2分别调用这个函数，截图并分析结果
+	void printAddr(){
+		cout<<&stid<<" "<<&numOfStudents<<endl;
+	}  
+
+3.友元：
+	请实现三个类A、B、C。其中B把A作为友元，C把B作为友元，请通过实验验证A可不可以访问C的私有数据？换句话说我朋友的朋友是不是我的朋友？
+
+4.const保护
+4.1 常对象：
+	#include<iostream>
+	using namespace std;
+
+	class R {
+	public:
+		R(int r1, int r2) : r1(r1), r2(r2) { }
+		void print();
+		void print() const;
+	private:
+		int r1, r2;
+	};
+
+	void R::print() {
+		cout << r1 << ":" << r2 << endl;
+	}
+
+	void R::print() const {
+		cout << r1 << ";" << r2 << endl;
+	}
+
+	int main() {
+		R a(5,4);
+		a.print(); 
+		const R b(20,52);
+		b.print();
+		return 0;
+	}
+	（1）测试上面这段代码，两次调用的print分别是调用的哪个函数？
+	（2）在R类中增加一个成员函数change()如下，尝试用a对象和b对象分别调用它可以吗？为什么？
+		void change(int x1,int x2){ 
+			r1=x1;
+			r2=x2;
+		}
+
+4.2 常成员：
+	#include <iostream>
+	using namespace std;
+
+	class A {
+	public:
+		A(int i);
+		void print();
+	private:
+		const int a;
+		static const int b;   //静态常数据成员
+	};
+
+	const int A::b = 10;	//静态常数据成员在类外说明和初始化
+
+	//常数据成员只能通过初始化列表来获得初值
+	A::A(int i) : a(i) { }
+
+	void A::print() {
+		cout << a << ":" << b << endl;
+	}
+	int main() {
+	/*建立对象a和b，并以100和0作为初值，分别调用构造函数，通过构造函数的初
+		始化列表给对象的常数据成员赋初值*/
+		A a1(100), a2(0);
+		a1.print();
+		a2.print();
+		return 0;
+	}
+    （1）结合以上程序，将A::A(int i) : a(i) { } 语句 改为 A::A(int i) :{ a=i; }可以吗？为什么？
+
+4.3 常引用：
+	#include <iostream>
+	#include <cmath>
+	using namespace std;
+
+	class Point {	//Point类定义
+	public:	//外部接口
+		Point(int x = 0, int y = 0) : x(x), y(y) { }
+		int getX() { return x; }
+		int getY() { return y; }
+		friend float dist(const Point &p1, const Point &p2);
+	private:	//私有数据成员
+		int x, y;
+	};
+
+	float dist(const Point &p1, const Point &p2) {	//常引用作形参
+		double x = p1.x - p2.x;
+		double y = p1.y - p2.y;
+		return static_cast<float>(sqrt(x * x + y * y));
+	}
+
+	int main() {	//主函数
+		const Point myp1(1, 1), myp2(4, 5);	//定义Point类的对象
+		cout << "The distance is: ";
+		cout << dist(myp1, myp2) << endl;	//计算两点间的距离
+		return 0;
+	}
+	（1）在以上程序基础上, 尝试将友元函数 dist(const Point &p1, const Point &p2) 的两处声明和类外定义的形参都取消const可以吗？为什么？
+	（2）在以上程序基础上，尝试将main()函数中 const Point myp1(1, 1), myp2(4, 5); 语句中的const 取消，程序能正常运行吗？为什么？
+
+4.4 常指针：
+    #include <iostream>
+	#include <cmath>
+	using namespace std;
+	
+	int main() {
+		int a = 10;
+		int b = 20;
+		const int *ap1 = &a;
+		int * const ap2 = &a;
+		*ap1 = 10;
+		ap1 = &b;
+		*ap2 = 10;
+		ap2 = &b;
+		return 0;
+	}
+	参考以上代码，请测试哪行代码会出现代码错误？const int *和int * const有什么区别？

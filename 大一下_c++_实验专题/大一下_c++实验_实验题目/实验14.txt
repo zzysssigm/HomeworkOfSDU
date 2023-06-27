@@ -1,0 +1,110 @@
+实验14、 模板特化、模板元编程
+实验目的：
+1. 培养通用性泛型编程能力。
+2. 练习模板特化、模板元编程
+
+
+实验内容：
+参照《C++语言程序设计》学生用书和课件PPT，完成以下内容：
+
+1. 模板特化：实践第9章PPT，P93-94,对例9-8,Stack栈类模板进行偏特化，使得以下测试程序可以测试运行。注意，PPT中给出的偏特化的模板目前声明了7个public函数，但是只有push和pop两个函数有定义，目前的代码是不能正常编译的。请问这是因为我们没有定义哪个函数造成的？按照上面的模板对这个函数进行定义，然后运行以下程序。在sz的值是100的时候打印的sizeof(stk)是多少？为什么？
+	#include "stack.h"
+	#include <iostream>
+
+	using namespace std;
+	#define sz 100
+
+	int main(){
+		Stack<bool, sz> stk;
+		cout<<"size of Stack<bool, 100>: "<<sizeof(stk)<<endl;
+		for(int i=0;i<sz;i++){
+			stk.push((bool)(i%2));
+		}
+		for(int i=0;i<sz;i++){
+			cout<<i<<"\t"<<stk.pop()<<endl;
+		}
+		return 0;
+	}
+
+2. 模板元编程：参照第9章PPT，P100例编写Power.h,使得以下main函数可以测试运行。
+	#include "Power.h"
+	#include <iostream>
+	using namespace std;
+
+	int main(){
+		int v = Power<4>::value(2);
+		cout<<"2^4="<<v<<endl;
+		v = power<5>(3);
+		cout<<"3^5="<<v<<endl;		
+	}
+  
+3. PPT 104页的代码可以帮助我们理解可变参数的传递，去掉func函数定义参数中的const T &t之后会出现什么样的编译错误？为什么会有这个错误？在函数调用的时候怎么做就不会出现这个错误了？：
+    //注意需加编译选项 -std=c++17或-std=gnu++17
+	#include<iostream>
+	template <typename T>  
+	void print(T &t) { //另一函数
+	  std::cout<<t<<std::endl;
+	}   
+
+	template <typename T, typename... TypeArgs>  
+	void func(const T &t, const TypeArgs&... args) { 
+	  std::cout<<sizeof...(args)<<std::endl; //参数个数
+	  (print(args),...);  //折叠表达式，对args的每个参数调用print
+	}
+
+	int main(){
+		func(3, 4.5, "hello world!");
+		return 0;
+	} 
+
+参照《C++语言程序设计》学生用书，完成以下内容：
+
+4. 练习习题9-21，模板特化，函数模板重载 。
+#include <iostream>
+using namespace std;
+
+template <class T>
+void mySwap(T &x, T &y) {
+	T temp = x;
+	x = y;
+	y = temp;
+}
+
+template <class T>
+void bubbleSort(T a[], int n) {
+	int i = n - 1;
+	while (i > 0) {
+	  int lastExchangeIndex = 0;
+	  for (int j = 0; j < i; j++)
+	    if (a[j + 1] < a[j]) {
+         mySwap(a[j], a[j + 1]);
+         lastExchangeIndex = j;
+	    }
+		i = lastExchangeIndex;
+	}
+}
+
+int main(){
+	int D[10] = {2, 7, 3, 5, 10, 6, 9, 1, 4, 8};
+	int *Dptr[10];
+	for(int i= 0;i<10;i++){
+		Dptr[i] = &D[i];
+	}
+	cout<<"排序前结果： "<<endl;
+	for(int i= 0;i<10;i++){
+		cout<<*Dptr[i]<<" ";
+	}
+	cout<<endl;
+	
+	bubbleSort(Dptr, 10);
+	
+	cout<<"排序后结果： "<<endl;
+	for(int i= 0;i<10;i++){
+		cout<<*Dptr[i]<<" ";
+	}
+	cout<<endl;
+}
+
+以上 bubbleSort 函数模板可以为数组排序,但如果将一个指针数组传递给它，在排序时将比较指针所存储地址的大小。
+(1)请利用函数模板重载技术,使得对指针数组进行排序时,以指针所指向内容为比较依据。
+(2)在解决问题(1)时，如果采取了对 bubbleSort 函数模板重载的办法,将使得起泡排序的主要代码被书写两遍，造成了代码的冗余,请思考如何解决这一问题。

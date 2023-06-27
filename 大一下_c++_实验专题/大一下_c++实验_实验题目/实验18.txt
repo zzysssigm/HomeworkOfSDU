@@ -1,0 +1,87 @@
+实验18、 输入/出流文件、异常处理
+实验目的：
+1.掌握输入/出流文件编程
+2.掌握异常处理的声明和执行过程
+
+实验要求：
+在课程网站下载实验报告模板，完成以下实验内容，最后填写实验报告，上传到学校课程网站。
+
+实验内容：
+参照《C++语言程序设计》学生用书和课件PPT（见课程网站course.sdu.edu.cn），完成以下内容：
+
+1. 练习标准程序库的异常类。第12章PPT，例12_3。 
+
+2. 异常类继承。设计一个类 A, 再设计一个类B公有继承类A，再设计一个类C公有继承类B。写一个函数void fun()在内部分别throw A类型、B类型以及C类型的异常对象。在main函数中用try保护fun的调用，并按顺序catch C类型，B类型，A类型的异常信息，在每个catch后的程序块中打印catch到了什么类型的异常。请分别尝试在fun中throw A、B、C类型的异常对象时程序的输出情况，并分析。修改catch的先后顺序为A，B，C再重复上述实验，分析输出结果。
+
+3. 内存分配异常。练习使用try,catch语句,在程序中用 new 分配内存时,如果操作未成功,则用try语句触发一个exception类型异常e,用 catch 语句捕获此异常，之后通过e.what()获取exception类型异常的错误信息并打印。 bonus：尝试增大new分配空间的大小，多大的时候会出错？写个程序确定一下分配空间大于哪一个值得时候new会出问题，出的什么问题。
+
+4. Array类模板异常处理。修改Array.h中的类模板, 将各种assert保护的条件通过抛出异常的方式来处理。例如在执行“[]”运算符时,若输入的索引i在有效范围外，抛出out_of_range异常。写一个main函数检测上述异常的处理情况。将main函数和运行结果都进行截图展示。
+下面是stdexcept头文件中定义的几种异常类型，可以按需抛出不同类型的异常。
+namespace std {
+    class logic_error;
+    class domain_error;
+    class invalid_argument;
+    class length_error;
+    class out_of_range;
+    class runtime_error;
+    class range_error;
+    class overflow_error;
+    class underflow_error;
+}
+
+5. 运行如下代码并解释
+#include <iostream>
+using namespace std;
+int divide(int x, int y) {
+	if (y == 0)
+		throw x;
+	return x / y;
+}
+class A{
+	int id;
+public:
+	A(int i):id(i){
+		cout<<"object "<<id<<" is constructed"<<endl;	
+	}
+	~A(){
+		cout<<"object "<<id<<" is deconstructed"<<endl;	
+	}
+};
+int main() {
+	try {
+		A a0(0);
+		cout << "5 / 2 = " << divide(5, 2) << endl;
+		A a1(1);
+		cout << "8 / 0 = " << divide(8, 0) << endl;
+		A a2(2);
+		cout << "7 / 1 = " << divide(7, 1) << endl;
+		A a3(3);
+	} catch (int e) {
+		cout << e << " is divided by zero!" << endl;
+	}
+	cout << "That is ok." << endl;
+	return 0;
+}
+
+6. 利用5中的A类运行以下main函数并解释输出顺序。
+#include <iostream>
+#include <memory>
+using namespace std;
+
+class A{
+	int id;
+public:
+	A(int i):id(i){
+		cout<<"object "<<id<<" is constructed"<<endl;	
+	}
+	~A(){
+		cout<<"object "<<id<<" is deconstructed"<<endl;	
+	}
+};
+int main() {
+	A *a1 = new A(1);
+	A a2(2);
+	A *a3 = new A(3);
+	auto_ptr<A> a3_ptr(a3);
+	delete a1;
+}

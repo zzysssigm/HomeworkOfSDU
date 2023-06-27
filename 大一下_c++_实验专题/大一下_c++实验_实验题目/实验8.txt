@@ -1,0 +1,52 @@
+实验八、 类的继承
+
+实验目的：
+1. 练习类的继承
+
+实验内容：
+参照《C++语言程序设计》学生用书，完成以下实验：
+
+1. 通过下列描述进行类的设计
+	（1）定义一个载具（vehicle）类，有数据成员speed记录该载具的运行速度，每个载具的速度是固定的，利用const来修饰，并通过构造函数中进行赋值。数据成员location记录该载具当前的位置，假设载具只能在一维空间内行驶，初始位置是0。一个函数成员drive(int duration)，他的作用是每次调用之后将locationde的值增大duration*speed。每次调用drive函数还需要打印本次drive从哪个位置运动到了哪个位置。	（2）定义一个卡车（truck）类，它公有继承了载具类，在此基础上有新的数据成员load_capacity记录了卡车的最大载重量。这是一个const类型的常量，在构造函数中通过一个确定值进行构造。还有新的成员数据load_weight记录了当前卡车的装载量，初始化为0。有成员函数load(float w)来将w的值加到load_weight上实现装载操作，unload(float w)函数将w的值从load_weight中减去实现卸货操作。这两个函数的返回值都是bool类型。装载load之前要判断一下装载后load_weight的值要保证小于load_capacity的值，卸货unload之前也要判断一下卸货后load_weight的值要保证大于0，否则打印相应错误信息并返回false，其他时候执行装载和卸货操作并返回true值。	（3）定义一个冷藏车（refrigeratorCar）类，它公有继承了载具类，在此基础上有新的数据成员temperature记录了车上冷藏柜的当前温度，新的数据成员room_temperature记录室温。这是一个const类型的常量，在构造函数中给一个确定值进行构造。另有成员函数reset()将temperature的值定为室温room_temperature。
+	（4）定义一个冷藏卡车（refrigeratorTruck）类，它公有继承了卡车和冷藏车类，有新的成员函数load(float w, float  t)实现装载冷藏货物的操作，具体操作先执行Truck类的load操作，如果load失败了，返回false，如果load成功，再判断t的值是否小于temperature的值，如果小于，则将temperature的值set成t。重载unload(float w)函数实现与其父类稍微不同的功能。功能是先调用其父类refrigeratorCar的unload函数，如果unload失败直接返回false，如果unload成功，再判断load_weight的值是否为0。如果为0，表示目前空载，则调用上面定义的reset函数对温度进行重置。
+    （5）载具类构造函数需要一个参数来构造speed，卡车类构造函数需要两个参数，一个用来给载具类构造speed，一个来构造自己的load_capacity。同样的冷藏车的构造函数也有两个参数，一个参数给载具类构造speed，一个来构造自己的roomTemperature。最后冷藏卡车需要三个参数进行构造。
+	（6）所有数据成员类型都是float类型。
+	
+
+2. 首先不利用虚基类设计上述类，在main函数里执行以下指令，截图并回答下列问题。
+	int main(){	
+		//speed = 10, load_capacity = 1000, roomTemperature = 28
+		RefrigeratorTruck t(10,1000,28);
+		t.RefrigeratorCar::drive(1);
+		t.Truck::drive(1);	
+		//t.drive(1);
+	}
+	（1）通过调用t.RefrigeratorCar::drive以及t.Truck::drive两个函数，分析这两个函数打印的从哪里drive到哪里的信息，分析他们之间的关系。对同一辆车来说，这样合理吗？
+	（2）可以直接调用t.drive(1)吗？为什么？
+	（3）在不用虚基类的时候，可以像下面这样对他父类的父类Vehicle进行构造吗？会报什么错误？
+		RefrigeratorTruck(float s, float l, float f):Vehicle(s), Truck(l,s), RefrigeratorCar(f,s){
+			cout<<"RefrigeratorTruck is constructed"<<endl;
+		}
+	
+
+3. 之后利用虚基类设计上述类，在main函数里执行以下指令，截图并回答下列问题。
+	int main(){	
+		//speed = 10, load_capacity = 1000, roomTemperature = 28
+		RefrigeratorTruck t(10,1000,28);
+		t.RefrigeratorCar::drive(1);
+		t.Truck::drive(1);	
+		t.drive(1);
+	}
+	（1）通过调用t.RefrigeratorCar::drive以及t.Truck::drive两个函数，分析这两个函数打印的从哪里drive到哪里的信息，分析他们之间的关系。对同一辆车来说，现在合理吗？
+	
+4. 在载具类的drive函数中除了打印从哪里drive到哪里的信息之外，再通过cout<<&location<<endl;打印一下location变量的地址，分析用不用虚基类两种情况下t.RefrigeratorCar::drive(1);以及t.Truck::drive(1);两次调用打印的location变量的地址有何变化。用虚基类之后这两个地址有什么关系？t.drive(1);这次调用打印的结果与前两次巧用打印的变量地址有什么关系？试着分许他们的关系和虚基类在这里所起的作用。
+
+5. 在这个例子中，父类的数据成员应该被设置为什么类型的？私有、保护、还是公有的？说出你的理由。	
+
+6. 在各个类的构造函数中打印信息通报是哪个类被构造了，在析构函数中打印信息通报是哪个类被析构了。分析利用虚基类和不利用虚基类两种情况下构造函数和析构函数的调用顺序。
+	
+
+
+
+
+

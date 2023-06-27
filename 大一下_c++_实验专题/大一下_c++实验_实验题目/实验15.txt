@@ -1,0 +1,38 @@
+实验14、 模板特化、模板元编程
+实验目的：
+1. 了解C++标准模板库STL使用
+
+实验内容：
+参照《C++语言程序设计》学生用书和课件PPT，完成以下内容：
+
+
+1. 请利用模板元编程设计一个类模板template<unsigned M, unsigned N> Permutation，内含一个枚举值VALUE，Permutation<M, N>::VALUE的值为排列数PMN(从N个值中选M个值有多少种可能性)。请参考排列数的定义以及在第九章课件第98页给出的通过模板元编程实现阶乘来实现上述类模板。main函数如下：
+int main(){
+	cout<<Permutation<3, 25>::VALUE<<endl;
+}
+
+
+2. 结合PPT例10.2做以下实验
+	（1）运行并截图	（2）结合transform算法和squre函数，重新写一个main函数实现以下功能。初始化一个int数组a，数组内容为{1,2,3,4,5,6}。再定义一个int数组b，与a有同样多的数据。通过调用transform函数实现将a中的每个元素求平方并放到b中对应位置，最后将b中的内容输出。transform函数的每一个参数应该是什么？
+	（3）利用vector而不是普通的数组来实现（2）的要求。注意begin()和end()函数的使用，b最开始是空的，可以通过b.resize(a.size())将b的数组大小强行调整为与a相同。
+
+3. PPT例10.7给出了一个实验利用栈反向输出单词，请修改这个程序，实现以下功能。我们输入一个字符串，中间有英文字母和英文的逗号如“terry,is,good”。写一个程序对该字符串进行处理，利用栈实现单词的反向输出，各单词之间通过回车隔开。上述例子的输出结果如下
+good 
+is 
+terry
+一些tips：通过#include <stack>;和#include <string>;可以使用stack类和string类。如果str是一个string类，str += 'a';操作可以在str后面接一个a字符。str.clear();可以将str的内容清空。
+
+4. PPT例10.8通过优先级队列模拟了细胞分裂，实践一下。请问这个程序能不能顺利编译运行？不能的话看一下问题出在哪里，解决问题并回答为什么。
+
+
+5. 例10.16介绍了如何通过sort函数直接对vector类中的元素进行排序，请将sort函数扩展到Point类中。Point有两个公有的int数据x和y。通过vector<Point> pts = {Point(1,2), Point(4,10), Point(5,1), Point(1,10), Point(3,2),Point(2,6), Point(4,3),Point(2,1)}; 建立一个Point类型的vector数组，之后将pts进行排序。注意要自己写一个返回值为bool类型的函数作为sort的第三个参数，输入是两个const Point &类型的引用。比较p1和p2大小时，两者先比较x，相同的时候再比较y。输出如下：
+1 2
+1 10
+2 1
+2 6
+3 2
+4 3
+4 10
+5 1
+
+

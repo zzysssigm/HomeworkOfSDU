@@ -1,0 +1,143 @@
+实验六、 多文件项目，预编译 ；对象数组
+
+实验目的：
+1. 掌握多文件项目构建
+2. 熟悉编译预处理指令
+3. 练习对象数组
+
+1. 多文件项目练习
+		PPT例5-10: 5_10.cpp,Point.h,Point.cpp
+	-----方式一、新建一个项目，将所有文件加入------
+	（1）建立一个项目文件（名称自定）。在项目中添加例5-10中的三个文件。
+		(a) 新建一个项目文件：“新建”/“项目”，选“Empty project"，输入项目名，"确定"。建立一个.dev文件。
+		(b) 在左侧项目管理窗口，右击项目名称，选“添加”，添加如下三个文件：
+			  Point.h
+			  Point.cpp
+			  5_10.cpp
+		   项目中默认添加的未命名n文件可删除。
+	   (c)编译、运行该项目。
+
+	-----方式二、将类实现单独编译，与使用者分开。------
+	（1）先将类实现文件Point.cpp单独编译成目标(.o)或静态库（.a)文件。
+		DEV-C++环境下操作：
+	   (a)“新建”/“项目”，选“static library"，输入项目名称，"确定"，建立一个静态库项目文件。
+	   (b) 在项目中添加类实现文件。
+		 在左侧项目管理窗口，右击项目名称点选“添加”，添加Point.cpp文件。项目中默认添加的未命名n文件可删除。
+	   (c)点击编译，生成目标文件Point.o 和静态库文件Point.a 。
+
+	（2）建立只包含头文件和主调文件的项目。
+		操作：(a)“新建”/“项目”，选“Empty project"，输入项目名称，"确定"，建立一个空应用项目文件。
+			 (b) 在项目中添加头文件和主调文件文件。
+			  在左侧项目管理窗口，右击项目名称选“添加”，添加Point.h, 5-10.cpp文件。项目中默认添加的未命名n文件可删除。
+		***(c)在项目属性：链接参数中添加库或对象。
+			   右击项目名称或点击顶行菜单“项目”/“项目属性”，点选"参数"—"链接"下"加入库或者对象"按钮，将上面产生的Point.o或Point.a文件加入，再编译运行该项目。
+
+		---注意：----
+		Dev-C++中的多文件编译项目，.h文件可以不加在项目中，因.h文件不编译，所以当改.h文件而.cpp未改时，不会触发项目重新编译，编译日志窗口显示“nothing to be done”。只有.cpp文件修改了，才会引发重新编译。所以尽量不要将函数实现写在头文件中。
+
+2. 在上述多文件项目环境中完成下列实验（多重定义）
+	（1）在Point.h文件中加入以下函数的定义语句，尝试编译运行，对编译结果进行截图。
+	 int test(){
+		return 315;
+	 }
+	（2）将上述函数替换为以下函数，再次尝试编译运行，对结果进行截图。
+	 inline int test(){
+		return 315;
+	 }
+	（3）结合课上讲的#include 的作用是将相应的文件内容嵌入到该文件中这一现实，尝试解释上述两者的不同。可以尝试用Point.h里面的内容替换掉#include "Point.h"语句，然后重新测试上述两个题目，应该更能感受inline函数和普通函数的不同，以及同一个文件被不同的文件include所产生的影响。
+	（4）如果在Point.cpp中加入以下函数的定义语句，如何在5_10.cpp中调用该函数？
+	 int test(){
+		return 315;
+	 }
+
+
+3. 在上述多文件项目环境中完成下列实验（外部变量与函数）
+	（1）分别在Point.cpp和5_10.cpp中定义一个全局变量int val = 315; 并在main函数中打印该值，然后进行编译，观察编译运行结果。
+	（2）在Point.cpp中定义全局变量int val = 315;，之后在5_10.cpp中通过extern int val;定义该变量为外部变量。在main函数中打印该值，然后进行编译，观察编译并解释运行结果。
+
+4. 将以下实验三中的抛骰子的代码通过多文件项目进行实现。该项目至少包含三个文件：dice.h对Dice类及GameStatus进行了定义。Dice.cpp对Dice的各个函数进行了实现，main.cpp函数定义了main函数实现了对类的实例化和相应函数的调用。请将每个文件截图。运行后的结果也需要截图。
+	#include <iostream>
+	#include <cstdlib>
+	using namespace std;
+
+	//投骰子、计算和数、输出和数
+	enum GameStatus { WIN, LOSE, PLAYING };
+
+	class Dice{
+		int seed;
+	public:
+		Dice(int seed):seed(seed){
+			srand(seed);//将种子传递给rand()
+		};
+		int rollDice();
+		void play();		
+	};
+
+	int Dice::rollDice() {
+		int die1 = 1 + rand() % 6;
+		int die2 = 1 + rand() % 6;
+		int sum = die1 + die2;
+		cout << "player rolled " << die1 << " + " << die2 << " = " << sum << endl;
+		return sum;
+	}
+
+	void Dice::play(){
+		GameStatus status = PLAYING;
+		while (status == PLAYING) { //只要状态仍为PLAYING,就继续进 行下一轮
+			int sum = rollDice(); //第一轮投骰子、计算和数
+			switch (sum) {
+			case 7:   //如果和数为7或11则为胜,状态为WIN
+			case 11:
+			  status = WIN;
+			  break;
+			case 2:   //和数为2、3或12则为负,状态为LOSE
+			case 3: 
+			case 12:
+			  status = LOSE;
+			  break;
+			default: /*其它情况,游戏尚无结果,状态为
+					PLAYING,记下点数,为下一轮做准备 */
+			  status = PLAYING;
+			  break;
+			}
+		}
+		//当状态不为PLAYING时上面的循环结束,以下程序段输出游戏结果
+		if (status == WIN)
+		  cout << "player wins" << endl;
+		else
+		  cout << "player loses" << endl;
+	}
+
+	int main() {
+		unsigned seed; 
+		cout<<"Please enter an unsigned integer: ";
+		cin >> seed;//输入随机数种子
+		Dice dice(seed);
+		dice.play();
+		return 0;
+	} 
+	
+5. 数组
+   （1）定义两个数组，int a[10],double b[10] 分别用cout打印a，(a+1)以及b，(b+1)的值，他们有什么不同，为什么？注意打印结果是16进制
+   （2）修改第1题中5_10.cpp的main函数，分别包含以下语句：
+		Point ps[2];
+		Point::showCount();
+		以及
+		Point *ps[2];
+		Point::showCount();
+		运行结果并截屏，解释两者的区别。
+   （3）运行以下代码，并修改count的值，每次增大十倍，例如测试100000,1000000等 看看增大到多少的时候程序运行出现错误？
+		const int count = 10000;
+		int main() {
+			int a[count];
+			unsigned long long sum = 0;
+			for(int i=0;i<count;i++){
+				a[i] = i;
+			}
+			for(int i=0;i<count;i++){
+				sum += a[i];
+			}
+			cout<<sum<<endl;
+			return 0;
+		}
+   （4）定义一个数组 int a[10];分别打印sizeof(a)以及sizeof(a[0])的值，分析他们分别对应着什么值？

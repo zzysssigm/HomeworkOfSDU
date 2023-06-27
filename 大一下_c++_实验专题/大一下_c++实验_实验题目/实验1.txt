@@ -1,0 +1,330 @@
+实验一、 C++开发环境与简单程序设计
+实验目的：
+1. 熟悉C++开发环境，能编写、调试程序，配置编译器。
+2. 练习简单的C++程序设计，熟悉C++语法特点，掌握程序调试方法。
+
+要求：
+  下载实验报告模板，完成以下实验内容，最后填写实验报告，以班级+姓名+学号+实验几命名（如：4张三20210013011实验一）上传至学校云盘 https://icloud.qd.sdu.edu.cn:7777/#/link/05E2E485C831D3F9DF14495FE21CA106 访问密码：LGz0
+相应实验室文件夹中。注意班级名只填写4/5/6中的一个 补修同学分配到5班进行实验
+
+实验内容：本次实验包括以下内容：
+参照《C++语言程序设计》学生用书，完成以下实验：
+
+第1章 实验1 C++开发环境应用入门
+1. 练习在几种不同编译环境下，总结它们各自的特点和不同。
+如：DEV-CPP, VS Code, VC，Clion等IDE中的两种或以上，体验它们的不同。 
+
+https://www.bloodshed.net/ DEV C++
+https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=Community&channel=Release&version=VS2022&source=VSLandingPage&cid=2030&passive=false Visual Studio Community版本
+https://code.visualstudio.com/ VS Code
+https://www.jetbrains.com/ 包含Clion等Jetbrains全家桶 但是没有适合我们的免费版本 教育版本需要.edu结尾的邮箱 私下用比较推荐
+https://www.eclipse.org/downloads/packages/release/kepler/sr2/eclipse-ide-cc-developers eclipse也有C开发版本 
+
+在IDE中运行下列两段代码，截屏运行结果并解释。
+//代码1
+#include <stdio.h>
+int main()
+{
+	int x=-1,z=2147483647;
+	unsigned int y=x;   
+
+	printf("x=%d,y=%u z=%d\n",x,y,z+1); 
+}   
+
+//代码2
+#include <iostream>
+using namespace std;
+int main(){
+	int a=0,b=0;
+	cout<<"1 "<<"2 "<<"3 "<<endl;
+	cout<<b++<<" "<<b++<<" "<<b++<<endl;
+	cout<<++a<<" "<<++a<<" "<<++a<<endl;  
+	return 0; 
+}
+
+2.了解不同的编译器
+http://gcc.gnu.org/   GCC
+https://jmeubank.github.io/tdm-gcc/download/    tdm-gcc
+https://clang.llvm.org/ clang
+
+*本项目将主要结合DEV C++进行讲解。如果有自己比较熟悉的IDE，也可以用自己喜欢的。DEV有的所有功能，其他IDE应该也都支持。请先提供的根据devc++教程的教程学习运行与调试程序。
+
+3.学会配置 Dev C++编译选项：
+
+#include <iostream>
+using namespace std;
+
+int main() {
+#ifdef TENG
+	cout<<"teng"<<endl;
+#else
+	cout<<"no teng"<<endl;
+#endif
+	return 0;
+}
+运行上述代码，对输出结果进行截屏。之后在"工具"/"编译选项"/"编译"框加入-DTENG，并勾选"编译时加入以下选项"。点击全部重新编译或按F12键，再重新编译运行，查看输出结果并截屏。为什么改变编译选项也可以改变程序的运行结果？
+
+第2章 实验2 C++简单程序设计
+运行第二章ppt中给出的下列程序，发现问题、提出问题，解决问题。
+
+//补充程序2-1
+//观察：通过调试功能跟踪观察变量的值
+#include <iostream>
+using namespace std;
+int main()
+{
+     int radius;	
+     cout<<"Please enter the radius!\n";
+     cin>>radius;	
+     cout<<"The radius is:"<<radius<<'\n';    
+  	 cout<<"PI is:"<<3.14<<'\n';
+     cout<<"Please enter a different radius!\n"; 
+     cin>>radius;	
+     cout<<"Now the radius is changed to:"<<radius<<'\n';
+     return 0;
+}
+
+
+//补充程序2-2
+//观察：通过调试工具跟踪观察符号常量。
+//思考：能给常量输入新值吗？如定义PI时不初始化会怎样？
+#include <iostream>
+using namespace std;
+int main()
+{   const double PI(3.14159);  	
+     int radius;	
+     cout<<"Please enter the radius!\n";
+     cin>>radius;	
+     cout<<"The radius is:"<<radius<<'\n';	
+     cout<<"PI is:"<<PI<<'\n';	
+     cout<<"Please enter a different radius!\n"; 
+     cin>>radius;	
+     cout<<"Now the radius is changed to:"<<radius<<'\n';
+     cout<<"PI is still:"<<PI<<'\n';
+     //cin>>pi;
+     return 0;
+}
+
+//补充程序2-3
+//观察：通过调试工具跟踪观察变量。
+#include <iostream>
+using namespace std;
+int main()
+{
+     const double pi(3.14159);  	
+     int radius(0);	
+     cout<<"The initial radius is:"<<radius<<'\n';	
+     cout<<"PI is:"<<pi<<'\n'; 
+     cout<<"Please enter a different radius!\n"; 
+     cin>>radius;	
+     cout<<"Now the radius is changed to:"<<radius<<'\n';
+     cout<<"PI is still:"<<pi<<'\n';
+     return 0;
+}
+
+//补充程序2-4
+//观察思考：将正数50000赋值给变量i以后，输出i的结果是什么？为什么？输出j的结果是什么？为什么？
+#include <iostream>
+using namespace std;
+int main()
+{
+   short int i;
+   unsigned short int j;
+   j = 50000; 
+   i = j;
+   cout << "Short int is:"<<i<<endl;
+   cout << "Short unsigned int is: "<<j<<endl;
+   return 0;
+}
+
+//补充程序2-5
+//观察：输出的值
+#include <iostream>
+#include <iostream>
+#include <climits>
+using namespace std;
+int main()
+{  cout <<"Min of short is: "<<SHRT_MIN<<endl;
+   cout <<"Max of short is: "<<SHRT_MAX<<endl;
+   cout <<"Min of int is: "<<INT_MIN<<endl;
+   cout <<"Max of int is: "<<INT_MAX<<endl;
+   cout <<"Min of long is: "<<LONG_MIN<<endl;
+   cout <<"Max of long is: "<<LONG_MAX<<endl;
+   cout <<"Max of unsigned short is: "<<USHRT_MAX<<endl;
+   cout <<"Max of unsigned int is: "<<UINT_MAX<<endl;
+   cout <<"Max of unsigned long is: "<<ULONG_MAX<<endl;
+   return 0;
+}
+
+
+//补充程序2-6
+//观察：123、0173、0x7B是同一个数的不同进制表示形式，输入和输出时都可以采用不同的进制。
+#include <iostream>
+#include <limits>
+using namespace std;
+int main()
+{
+   int isample, osample, hsample;
+   unsigned long ulsample;   
+   cin>>isample>>oct>>osample>>hex>>hsample; 
+   cout<<isample<<';'<<oct<<osample<<';'<<hex<<hsample<<endl;   
+   isample=123;
+   osample=0173;
+   hsample=0x7B;
+   ulsample=4294967295UL;
+   cout<<dec<<isample<<';'<<oct<< isample 
+       <<';'<<hex<< isample <<endl;
+  cout<<dec<< osample<<';' <<oct<<osample
+       <<';'<<hex<< osample <<endl;
+  cout<< dec<<hsample <<';'<<oct<< hsample<<';'  
+       <<hex<<hsample<<endl;
+  cout<<dec<< ulsample <<';'<<oct<<ulsample<<';' 
+       <<hex<<ulsample<<endl;
+ return 0;
+}
+
+//补充程序2-7
+//观察运行结果
+#include <iostream>
+#include <limits>
+using namespace std;
+const float PI_FLOAT = 3.1415926f;
+const double PI_DOUBLE = 3.1415926;
+const long double PI_LDOUBLE = 3.1415926; 
+int main()
+{
+  float nRadiusFloat = 5.5f, nAreaFloat;
+  double nRadiusDouble = 5.5, nAreaDouble;
+  long double nRadiusLDouble = 5.5, nAreaLDouble;
+  nAreaFloat = PI_FLOAT* nRadiusFloat* nRadiusFloat;
+	   nAreaDouble = PI_DOUBLE* nRadiusDouble* 
+                          nRadiusDouble;
+  nAreaLDouble = PI_DOUBLE* nRadiusDouble*  
+                              nRadiusDouble;
+  cout << "nAreaFloat = "<< nAreaFloat <<",sizeof(nAreaFloat) = "<< sizeof(nAreaFloat)<< endl;
+           
+ cout << "nAreaDouble = "<< nAreaDouble
+         <<" , sizeof(nAreaDouble) = "
+         << sizeof(nAreaDouble)<<endl;
+ cout << "nAreaLDouble = "<< nAreaLDouble
+         <<" , sizeof(nAreaLDouble) = "
+         << sizeof(nAreaLDouble)<<endl;
+return 0; 
+}
+
+//补充程序2-8
+//观察运行结果
+#include <iostream>
+using namespace std;
+int main()
+{
+   cout << 'A'<< ' '<<'a'<<endl;     //输出普通字符
+   cout << "one\ttwo\tthree\n";    //使用水平制表符
+   cout << "123\b\b45\n";             //使用退格符
+   cout << "Alert\a\n";                   //使用响铃键
+   return 0;
+}
+
+//补充程序2-9
+//观察程序运行过程中内存中bool变量的值
+#include <iostream>
+using namespace std;
+int main()
+{
+    bool bV1= true, bV2= false;
+    cout <<" value bV1 = "<<bV1<<endl;
+    cout <<"bool value bV2 = "<<bV2<<endl;
+    int nV1=bV1, nV2 = 0;
+    bV1 = nV2;
+    cout <<"int value nV1 = "<< nV1<<endl;
+    cout <<"bool value bV1 = "<<bV1<<endl;
+    return 0;
+}
+
+//补充程序2-10
+//观察：不同的编译器求值顺序可能不同
+#include <iostream>
+using namespace std;
+int main()
+{
+   int val1=24;
+   int val2=5;
+   double val3=24;
+   double val4=5;
+   cout << "int/int, 24/5= "<<val1/val2<<endl;    
+   cout << "int/int, 24%5= "<<val1%val2<<endl;  
+   val2=-5;
+   cout << "int/int, 24%(-5)= "<<val1%val2<<endl;
+   cout << "double/double, 24/5= "<<val3/val4<<endl; 
+// cout << "double/double, 24%5= "<<val3%val4<<endl;  
+   cout << "double/int, 24/5= "<<val3/val2<<endl;   
+   cout << "int/double, 24/5= "<<val1/val4<<endl;   
+       val1=5;  
+       cout <<"val1 = "<<val1<<endl; 
+       cout <<val1++<<", ";
+       cout <<++val1<<", ";
+       cout <<val1--<<", ";
+       cout <<--val1<<endl;    
+       val1=5;  
+       cout <<"val1 = "<<val1<<endl;            
+   cout <<val1++<<", "<<++val1<<", "<<val1--<<", "<<--val1<<endl; 
+}
+
+//补充程序2-13
+//观察思考：运行结果与课本23页的结果有什么不同吗？
+#include <iostream>
+#include <string>
+using namespace std;
+int main()
+{
+    cout <<"sizeof(short)="<<sizeof(short)<<endl;
+    cout <<"sizeof(unsigned short)="<<sizeof(unsigned  
+           short)<<endl;
+   cout <<"sizeof(int)= "<<sizeof(int)<<endl;
+   cout <<"sizeof(unsigned int)= "<<sizeof(unsigned 
+                 int)<<endl;
+   cout <<"sizeof(long)= "<<sizeof(long)<<endl;
+   cout <<"sizeof(unsigned long)="<<sizeof(unsigned 
+                long)<<endl;
+   cout <<"sizeof(float)= "<<sizeof(float)<<endl;
+   cout <<"sizeof(double)= "<<sizeof(double)<<endl;
+   cout <<"sizeof(long double)= "<<sizeof(long double)
+           <<endl;
+   cout <<"sizeof(char)= "<<sizeof(char)<<endl;
+   return 0;
+}
+
+//补充程序2-14
+//观察：观察各运算符的运行结果
+#include <iostream>
+#include <bitset>
+using namespace std;
+int main()
+{
+    cout << "~15 = "<<(~15)<<endl;
+    cout << "15 & 21 = "<<(15&21)<<endl;
+    cout << "15 ^ 21 = "<<(15^21)<<endl;
+    cout << "15 | 21 = "<<(15|21)<<endl;
+    unsigned int nTest = 9;
+    cout <<"nTest = "<<nTest<<endl;
+    nTest |= 1<<4; //将第4位置为1
+    cout <<"After set the position 4 to 1, nTest = "<<nTest
+            <<endl;
+	nTest &= ~(1<<4); //将第4位置0
+   cout <<"After set the position 4 to 0, nTest = "<<nTest<<endl;
+   bool nFlag;
+        for (int i=0; i<16; i++){ //实现翻转
+		nFlag = nTest & (1<<i);
+		if (nFlag) {
+			nTest &= ~(1<<i);
+		}
+		else{
+			nTest |= 1<<i;
+		}
+    }
+	cout <<"After flip, nTest = "<<nTest<<endl;
+	return 0;
+}
+---------------------------------------------------------------------------------------------
+
+

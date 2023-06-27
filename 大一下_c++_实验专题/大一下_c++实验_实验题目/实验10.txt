@@ -1,0 +1,91 @@
+
+实验10_1、 多态（一） 运算符重载（静态_编译时多态）
+实验目的：
+1. 掌握双目、单目（前、后）运算符重载
+2. 练习运算符重载的两种方式：类成员和非成员函数实现
+
+实验内容：
+参照《C++语言程序设计》学生用书和课件PPT（见课程网站course.sdu.edu.cn），完成以下内容：
+
+1. 练习第8章PPT例8-1，复数类加减法用成员函数实现运算符重载，形参是引用。截图并回答一下问题
+ （1）void operator = (const Complex &c2);能否变成void operator = (const Complex &c2) const;？为什么
+ （2）Complex operator + (const Complex &c2) const;中的两个const能去掉吗？为什么
+ （3）通过添加一个Complex operator + (const double &db) const;重载函数实现负数类complex与普通double类型数据的相加。在main中添加	c3 = c1 + 0.5; c3.display();截图并执行
+
+2. 练习第8章PPT例8-2，单目运算符重载，返回类型是引用。在main()中试用++++myclock和后++++，看能否实现连续加1？ main改为如下：
+	int main() {
+		Clock myClock(23, 59, 59);
+		cout << "First time output: ";
+		myClock.showTime();
+		cout << "Show myClock++:    ";
+		(myClock++++).showTime();
+		(myClock).showTime();
+		cout << "Show ++myClock:    ";
+		(++++myClock).showTime();
+		return 0; 
+	 }
+
+3. 实践第8章PPT例8-3，以非成员函数形式重载Complex的加减法运算和“<<”运算符，两个形参都为引用。不用友元函数能不能实现对各操作符的非成员函数的重载？如果可以的话可以通过什么样的方法？
+
+4. 将课上常用的Point类（有数据成员x和y）用友元函数或成员函数的方式实现双目操作符+，-，=，==的重载。
+
+5. 通过重载赋值操作符实现深拷贝。假设有如下类
+	class MyArray{
+		int array_size;
+		int *arr = NULL;
+	public:
+		MyArray(int asize):array_size(asize){
+			arr = new int[array_size];
+			for(int i=0;i<array_size;i++){
+			arr[i] = 0;
+			}
+		}
+		~MyArray(){
+			delete arr;
+		}
+		int getArraySize() const{
+			return array_size;
+		}
+		int getArr(int idx) const{
+			if(idx >= array_size){
+				cout<<"overflow"<<endl;
+				exit(-1);
+			}
+			return arr[idx];
+		}
+		void setArr(int idx, int v){
+			if(idx >= array_size){
+				cout<<"overflow"<<endl;
+				exit(-1);
+			}
+			arr[idx] = v;
+		}
+		void print() const{
+			cout<<"addr: "<<arr<<" ";
+			cout<<"contents: "<<" ";
+			for(int i=0;i<array_size;i++){
+				cout<<arr[i]<<" ";
+			}
+			cout<<endl;
+		}
+	};
+
+	int main(){
+		MyArray arr1(10), arr2(10);
+		for(int i=0;i<10;i++){
+			arr1.setArr(i, i);
+			arr2.setArr(i, 2*i);
+		}
+		arr1.print();
+		arr2.print();
+		arr1 = arr2;
+		arr1.print();
+	}
+
+	（1）请重新设计针对MyArray类的=运算符实现深拷贝操作。当有两个MyArray对象arr1和arr2执行arr1=arr2操作时，不是简单的将对象内容进行拷贝，而是执行如下操作。首先判断两个对象的array_size是否相等，不相等的话打印错误信息，之后停止操作，将arr2的arr数组中的array_size个值一个个的赋值给arr1的arr数组相应的位置中。
+	（2）去掉getArraySize和getArr函数定义中的const会产生什么样的编译错误？结合之前我们学习的常量定义的知识解释一下为什么。
+	（3）分析一下重载=之前和之后main函数中打印的结果的区别，截图并解释。
+	
+
+6. 挑战：（选做，有额外分）
+  第8章PPT，P28，创新与挑战：创建大整数类型

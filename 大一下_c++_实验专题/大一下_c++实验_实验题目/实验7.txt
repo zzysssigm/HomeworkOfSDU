@@ -1,0 +1,65 @@
+实验七、 对象数组，指针，动态内存
+
+实验目的：
+1. 练习对象数组
+2. 训练使用指针的能力：深刻认识灵活性与潜在的危险，理解指针与引用的不同。
+3. 练习动态内存的使用
+4. 练习vector与string的使用
+5. 联系感受类的继承与派生
+
+实验内容：
+参照《C++语言程序设计》学生用书，完成以下实验：
+
+
+1. 练习以下课程内容，做好结果截图与分析
+   练习第六章PPT，P88例6-11，函数指针
+   练习第六章PPT，P100例6-16， 用new 创建动态对象。
+   练习第六章PPT，P103例6-17， 动态创建对象数组。
+   练习第六章PPT，P107例6-18， 动态创建多维数组。
+
+2. 分析实验7附件.zip中的 c6test.cpp。
+   1) 请解释exec函数中以下语句（第44行）的含义：
+      Object *a=new Object, &b(*new Object(*a));//请解释该语句
+
+   2）如果此句中的&b(*new Object(*a))改为如下两种形式，其含义及对运行结果的影响有什么不同？
+      a）*b(new Object(*a))；//注意此时b是指针，后序对类成员的调用需要用b->而不是b.
+      b）b(*new Object(*a))
+
+   3）此题如何避免内存泄漏？除了delete a之外，还有谁需要被delete？
+   
+3. vector练习
+   （1）请下一个程序，实例化一个int类型的vector对象arr。push_back函数可以向vector数组中插入数值，例如arr.push_back(10)插入值10。请写程序让用户持续的输入整数值插入arr数组中，当用户输入0时停止输入。然后通过以下代码遍历vector数组将用户输入的值相加并输出。
+	int sum = 0;
+	for(int i=0;i<arr.size();i++){
+		sum += arr[i]; 
+	}
+	cout<<sum<<endl;
+	（2）运行并解释如下代码段的内容。
+	#include <iostream>
+	#include <vector>
+	using namespace std;
+
+	int main(){
+		vector<int> vec = {103, 315, 403, 1224, 826};
+		cout<<"the size of a vector object: "<<sizeof(vec)<<endl;
+		cout<<"content starting from the address of vec:"<<endl;
+		const int *vec_ptr = (const int *)&vec;
+		for(unsigned long i=0;i<sizeof(vec)/4+vec.size();i++){
+			cout<<&vec_ptr[i]<<":	"<<vec_ptr[i]<<endl;
+		}
+		
+		cout<<"content starting from the address of vec[0]:"<<endl;
+		const int *vec0_ptr = &vec[0];
+		for(unsigned long i=0;i<vec.size();i++){
+			cout<<&vec0_ptr[i]<<":	"<<vec0_ptr[i]<<endl;
+		}
+		return 0;
+	}
+
+4. string练习
+   请写一个程序，实例化一个string类型的变量，变量名为str，之后利用getline函数读取一条字符串“just a test”到str中。之后再实例化一个string变量str1，内容是"you type in: "+str。之后打印str1的内容。别忘了#include <string>
+   
+5. 分析对象数组项目fig07_15to17以及fig07_22to24。
+
+6. 通过学习inheritance.cpp中的代码，感受类的不同继承方式对成员数据访问权限的影响。这个自己感受下就好了，不用回答问题，下节课我们会重点讲解。
+
